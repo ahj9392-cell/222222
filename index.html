@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>마하나임 목장 발표</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Noto Sans KR', '맑은 고딕', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #eef2f7, #f9f9f9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: #ffffff;
+      width: 520px;
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 34px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #1f3c88;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      color: #666;
+      margin-bottom: 35px;
+    }
+
+    .input-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    input {
+      padding: 14px;
+      font-size: 18px;
+      width: 220px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    button {
+      padding: 14px 22px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      background: #1f3c88;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 40px;
+      padding: 30px 20px;
+      border-radius: 15px;
+      background: #f4f6fa;
+      min-height: 110px;
+      font-size: 24px;
+      color: #2c3e50;
+    }
+
+    /* 애니메이션 */
+    .fade-in {
+      animation: fadeUp 0.6s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .leader {
+      margin-top: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1f3c88;
+      opacity: 0;
+      animation: fadeUp 0.6s ease-out forwards;
+      animation-delay: 0.6s;
+    }
+
+    .location {
+      margin-top: 10px;
+      font-size: 20px;
+      color: #555;
+      opacity: 0;
+      animation: fadeUp 0.6s ease-out forwards;
+      animation-delay: 1.2s;
+    }
+
+    .notice {
+      font-size: 20px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>마하나임 목장 발표</h1>
+    <div class="subtitle">이름을 입력해주세요</div>
+
+    <div class="input-wrap">
+      <input type="text" id="nameInput" placeholder="이름 입력" onkeyup="if(window.event.keyCode==13){checkGroup()}">
+      <button onclick="checkGroup()">확인</button>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const groups = {
+      "성민/동균": { leader: "천성민", members: ["천성민","유동균","정명진","이찬미","고은비","양지수","진한영","박지은","조수민","신효근"] },
+      "재희(새가족)": { leader: "이재희", members: ["이재희","김현경","김민아","이상협","신의명","신정민","이신우","김주현"] },
+      "세은/도훈": { leader: "장세은", members: ["장세은","김도훈","석중권","박수정","신서연","정동하","황현서","장재완","송가연","이민선","김성미","김민훈"] },
+      "주리/소망": { leader: "송주리", members: ["송주리","김소망","이재현","서혁수","윤하원","윤철희","이민후","신현민","김민주","이강민","최민하"] },
+      "현성/다은": { leader: "김현성", members: ["김현성","정다은","이영민","김하종","이지훈","황혜진","장효찬","최운규","김은찬","정은진","오기은"] },
+      "광현/무성": { leader: "배광현", members: ["배광현","이온유","김무성","김준년","남재형","이준원","남창형","안찬우","심상은","심헌"] },
+      "지민/희진": { leader: "박지민", members: ["박지민","안희진","김진수","유서영","박지웅","이재은","김재웅","황호산","박하영","손태열"] },
+      "나현/현경": { leader: "유나현", members: ["유나현","이현경","한수향","심혜단","이충섭","윤성원","김하경","최선규","서온유","여지민","김주민","송하준"] },
+      "민서/현도": { leader: "김민서", members: ["김민서","박수림","유현도","장소은","이관우","이현희","이영재","이은서","이효은","이창민","박지찬"] }
+    };
+
+    const locations = {
+      "천성민": "유년부실",
+      "송주리": "유년부실",
+      "장세은": "유년부실",
+      "김현성": "청년부실",
+      "배광현": "청년부실",
+      "박지민": "청년부실",
+      "유나현": "아담스관",
+      "김민서": "아담스관",
+    };
+
+    function checkGroup() {
+      const name = document.getElementById("nameInput").value.trim();
+      const result = document.getElementById("result");
+
+      result.innerHTML = "";
+
+      if (name === "") {
+        result.innerHTML = `<div class="notice fade-in">이름을 입력해주세요.</div>`;
+        return;
+      }
+
+      for (const groupName in groups) {
+        const group = groups[groupName];
+        if (group.members.includes(name)) {
+          const location = locations[group.leader] || "미정";
+          result.innerHTML = `
+            <div class="fade-in"><strong>${name}</strong>님은</div>
+            <div class="leader">
+              ${group.leader} 리더의 [${groupName}] 조입니다.
+            </div>
+            <div class="location">
+              📍 목장 모임 장소 : <strong>${location}</strong>
+            </div>
+          `;
+          return;
+        }
+      }
+
+      result.innerHTML = `
+        <div class="notice fade-in">⚠️ 조가 배정되지 않았습니다.</div>
+        <div class="notice fade-in" style="font-size:16px; color:#777; margin-top:5px;">목장장에게 문의해주세요~</div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
